@@ -1,0 +1,87 @@
+const mongoose = require('mongoose');
+
+const profitEngineerSchema = new mongoose.Schema({
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true 
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    bio: {
+        type: String,
+        required: false,
+        default: ''
+    },
+    subscription: {
+        type: {
+            type: String,  // e.g., 'monthly', 'annual'
+            required: true,
+            enum: ['monthly', 'annual'],
+        },
+        status: {
+            type: String,  // 'active', 'inactive'
+            required: true,
+            enum: ['active', 'inactive'],
+            default: 'active',
+        },
+        startDate: {
+            type: Date,
+            required: true,
+        },
+        endDate: {
+            type: Date,
+            required: true,
+        }
+    },
+    portfolioIds: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Portfolio' 
+    }],
+    rating: {
+        type: Number, // Average rating based on user feedback
+        default: 0,
+        min: 0,
+        max: 5,
+    },
+    reviews: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        rating: { type: Number, min: 0, max: 5 },
+        comment: { type: String },
+        date: { type: Date, default: Date.now },
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now,
+    }
+});
+
+// Add a method to update the rating and review system
+profitEngineerSchema.methods.addReview = async function (userId, rating, comment) {
+    const review = {
+        userId,
+        rating,
+        comment,
+        date: Date.now()
+    };
+
+    this.reviews.push(review);
+
+    // Recalculate the rating
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / this.reviews.length;
+
+    this.rating = averageRating;
+    await this.save();
+};
+
+// Create the model based on the schema
+const ProfitEngineer = mongoose.model('ProfitEngineer', profitEngineerSchema);
+
+module.exports = ProfitEngineer;
