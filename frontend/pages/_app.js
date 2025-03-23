@@ -16,3 +16,8 @@ import PlaceBet from './components/PlaceBet';
 
 // In your router configuration
 <Route path="/place-bet" element={<PlaceBet />} />
+
+import Leaderboard from './components/Leaderboard';
+
+// In your router configuration
+<Route path="/leaderboard" element={<Leaderboard />} />
