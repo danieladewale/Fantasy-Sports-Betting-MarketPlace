@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logo from '../assets/images/betiq-logo.svg';
 import nbaLogo from '../assets/images/teams/nba-logo.svg';
 import nflLogo from '../assets/images/teams/nfl-logo.svg';
 import TeamLogo from './TeamLogo';
@@ -118,12 +117,17 @@ const Teams = () => {
 
   const checkLoginStatus = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser && currentUser.email) {
+    if (currentUser) {
       setUser(currentUser);
+      setIsLoading(false);
     } else {
-      window.location.href = '/';
+      navigate('/');
     }
-    setIsLoading(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    navigate('/');
   };
 
   const toggleDropdown = () => {
@@ -151,14 +155,12 @@ const Teams = () => {
   const teams = selectedLeague === 'NBA' ? nbaTeams : nflTeams;
 
   const handlePlaceBet = (team) => {
-    // Navigate to the team portfolio page with the team name and league as parameters
     navigate(`/team-portfolio/${encodeURIComponent(team)}/${selectedLeague}`);
   };
 
   return (
     <div className="teams-container">
       <header className="header">
-        <img src={logo} alt="logo" className="logo" />
         <nav className="nav">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/teams" className="nav-link active">Teams</Link>
@@ -176,10 +178,7 @@ const Teams = () => {
               <Link to="/">Home</Link>
               <a href="#profile">My Profile</a>
               <a href="#settings">Settings</a>
-              <a href="#" onClick={() => {
-                localStorage.removeItem('currentUser');
-                window.location.href = '/';
-              }}>Logout</a>
+              <a href="#" onClick={handleLogout}>Logout</a>
             </div>
           </div>
         )}
@@ -212,16 +211,6 @@ const Teams = () => {
                   <div key={team} className="team-card">
                     <TeamLogo teamName={team} league={selectedLeague} />
                     <h3 className="team-name">{team}</h3>
-                    <div className="team-stats">
-                      <div className="stat">
-                        <span className="stat-label">Win Rate</span>
-                        <span className="stat-value">65%</span>
-                      </div>
-                      <div className="stat">
-                        <span className="stat-label">Odds</span>
-                        <span className="stat-value">1.5x</span>
-                      </div>
-                    </div>
                     <button 
                       className="bet-button"
                       onClick={() => handlePlaceBet(team)}
@@ -237,7 +226,7 @@ const Teams = () => {
       </main>
 
       <footer className="footer">
-        <p>&copy; 2025 BetIQ. All rights reserved.</p>
+        <p>&copy; 2025 Sports Betting. All rights reserved.</p>
       </footer>
     </div>
   );

@@ -9,6 +9,32 @@ const TeamLogo = ({ teamName, league }) => {
       .replace(/\s+/g, '')  // Remove spaces
       .replace(/^the/i, ''); // Remove leading "the" if present
 
+    // If it's the league logo, use a styled div for NBA and NFL logo from package
+    if (teamName === 'NBA') {
+      return (
+        <div className="league-logo nba" style={{
+          width: '100px',
+          height: '100px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#1d428a',
+          borderRadius: '50%',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '28px',
+          letterSpacing: '1px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        }}>
+          NBA
+        </div>
+      );
+    }
+
+    if (teamName === 'NFL') {
+      return <NFLLogos.NFL size={100} />;
+    }
+
     if (league.toUpperCase() === 'NBA') {
       // Map team names to NBA package component names
       const nbaTeamMap = {
@@ -98,23 +124,27 @@ const TeamLogo = ({ teamName, league }) => {
     }
 
     // Fallback to league logo if team logo not found
-    const LeagueLogo = league.toUpperCase() === 'NFL' ? NFLLogos.NFL : null;
-    if (LeagueLogo) {
-      return <LeagueLogo size={80} />;
+    if (league.toUpperCase() === 'NFL') {
+      return <NFLLogos.NFL size={80} />;
     }
 
+    // Default fallback to NBA styled div
     return (
-      <div className="fallback-logo" style={{ 
-        width: '80px', 
-        height: '80px', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div className="league-logo nba" style={{
+        width: '80px',
+        height: '80px',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f0f0f0',
+        background: '#1d428a',
         borderRadius: '50%',
-        border: '2px solid #ccc'
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: '24px',
+        letterSpacing: '1px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
       }}>
-        <span style={{ fontSize: '24px', fontWeight: 'bold' }}>{league.toUpperCase()}</span>
+        NBA
       </div>
     );
   };

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logo from '../assets/images/betiq-logo.svg';
 import '../styles/PlaceBet.css';
 
 const PlaceBet = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [selectedSport, setSelectedSport] = useState('');
   const [selectedMatch, setSelectedMatch] = useState('');
@@ -31,12 +31,17 @@ const PlaceBet = () => {
 
   const checkLoginStatus = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (currentUser && currentUser.email) {
+    if (currentUser) {
       setUser(currentUser);
+      setIsLoading(false);
     } else {
-      window.location.href = '/';
+      navigate('/');
     }
-    setIsLoading(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    navigate('/');
   };
 
   const handleSportChange = (e) => {
@@ -58,16 +63,23 @@ const PlaceBet = () => {
     }
 
     const betData = {
+      id: Date.now(),
       sport: selectedSport,
       match: selectedMatch,
       team: selectedTeam,
       amount: parseFloat(betAmount),
       timestamp: new Date().toISOString(),
-      userId: user.email
+      userId: user.id
     };
 
-    // Here you would typically make an API call to your backend
-    console.log('Placing bet:', betData);
+    // Store bet in localStorage
+    const userBets = JSON.parse(localStorage.getItem('userBets')) || {};
+    if (!userBets[user.id]) {
+      userBets[user.id] = [];
+    }
+    userBets[user.id].push(betData);
+    localStorage.setItem('userBets', JSON.stringify(userBets));
+
     alert('Bet placed successfully!');
     
     // Reset form
@@ -102,8 +114,6 @@ const PlaceBet = () => {
   return (
     <div className="place-bet-container">
       <header className="header">
-        <img src={logo} alt="logo" className="logo" />
-
         <nav className="nav">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/place-bet" className="nav-link active">Place Your Bet</Link>
@@ -122,10 +132,7 @@ const PlaceBet = () => {
               <Link to="/">Home</Link>
               <a href="#profile">My Profile</a>
               <a href="#settings">Settings</a>
-              <a href="#" onClick={() => {
-                localStorage.removeItem('currentUser');
-                window.location.href = '/';
-              }}>Logout</a>
+              <a href="#" onClick={handleLogout}>Logout</a>
             </div>
           </div>
         )}
@@ -213,7 +220,7 @@ const PlaceBet = () => {
       </main>
 
       <footer className="footer">
-        <p>&copy; 2025 BetIQ. All rights reserved.</p>
+        <p>&copy; 2025 Sports Betting. All rights reserved.</p>
       </footer>
     </div>
   );

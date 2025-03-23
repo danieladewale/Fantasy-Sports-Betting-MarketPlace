@@ -1,157 +1,229 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import '../styles/Portfolio.css';
 
-// Define the API URL
-const API_URL = 'http://localhost:5000';
-
 const Portfolio = () => {
-  const [leaderboardType, setLeaderboardType] = useState('global');
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { userId } = useParams();
+  const navigate = useNavigate();
+  const [portfolioData, setPortfolioData] = useState({
+    activeBets: [],
+    completedBets: [],
+    totalProfit: 0,
+    winRate: 0
+  });
+  const [user, setUser] = useState(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    fetchData();
-  }, [leaderboardType]);
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Log the request
-      console.log(`Fetching ${leaderboardType} leaderboard...`);
-      
-      const response = await axios.get(`${API_URL}/api/leaderboard/${leaderboardType}`);
-      
-      // Log the response
-      console.log('Server response:', response.data);
-      
-      if (Array.isArray(response.data)) {
-        setLeaderboard(response.data);
-      } else {
-        console.error('Invalid data format:', response.data);
-        setError('Received invalid data format from server');
-      }
-    } catch (err) {
-      console.error('Error details:', err);
-      
-      if (err.response) {
-        // Server responded with an error
-        setError(`Server error: ${err.response.data.message || 'Unknown error'}`);
-      } else if (err.request) {
-        // No response received
-        setError('Could not connect to server. Please check if the server is running.');
-      } else {
-        // Request setup error
-        setError(`Request failed: ${err.message}`);
-      }
-    } finally {
-      setLoading(false);
+    // Get current user data from localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    // If no current user, redirect to login
+    if (!currentUser) {
+      navigate('/');
+      return;
     }
+
+    // Set current user
+    if (currentUser) {
+      setUser(currentUser);
+      setIsOwnProfile(!userId || userId === currentUser.id);
+    }
+
+    // If viewing another user's portfolio, get their data
+    if (userId) {
+      // Mock data for different users
+      const mockUsers = {
+        '1': { id: '1', name: 'Michael Jordan', totalBets: 150, winRate: 68.5 },
+        '2': { id: '2', name: 'Tom Brady', totalBets: 120, winRate: 62.3 },
+        '3': { id: '3', name: 'LeBron James', totalBets: 180, winRate: 58.9 },
+        '4': { id: '4', name: 'Patrick Mahomes', totalBets: 90, winRate: 55.2 },
+        '5': { id: '5', name: 'Stephen Curry', totalBets: 200, winRate: 72.0 }
+      };
+
+      const userData = mockUsers[userId];
+      if (userData) {
+        setUser(userData);
+        // Generate mock portfolio data for this user
+        setPortfolioData({
+          activeBets: [
+            {
+              id: 1,
+              team1: 'Lakers',
+              team2: 'Warriors',
+              betAmount: 200 * Math.random(),
+              potentialWinnings: 380 * Math.random(),
+              odds: 1.9,
+              date: '2024-03-25',
+              type: 'Spread'
+            },
+            {
+              id: 2,
+              team1: 'Celtics',
+              team2: 'Heat',
+              betAmount: 150 * Math.random(),
+              potentialWinnings: 285 * Math.random(),
+              odds: 1.9,
+              date: '2024-03-26',
+              type: 'Moneyline'
+            }
+          ],
+          completedBets: [
+            {
+              id: 3,
+              team1: 'Nets',
+              team2: 'Bucks',
+              betAmount: 100,
+              winnings: 190,
+              result: 'Won',
+              date: '2024-03-20',
+              type: 'Over/Under'
+            },
+            {
+              id: 4,
+              team1: 'Eagles',
+              team2: 'Cowboys',
+              betAmount: 120,
+              winnings: -120,
+              result: 'Lost',
+              date: '2024-03-19',
+              type: 'Spread'
+            }
+          ],
+          totalProfit: Math.floor(1000 * Math.random()),
+          winRate: userData.winRate
+        });
+      } else {
+        // User not found
+        navigate('/leaderboard');
+      }
+    } else {
+      // Get own portfolio from localStorage
+      const savedPortfolio = JSON.parse(localStorage.getItem('userPortfolio'));
+      if (savedPortfolio) {
+        setPortfolioData(savedPortfolio);
+      }
+    }
+  }, [userId, navigate]);
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   };
 
-  const handleTabChange = (type) => {
-    setLeaderboardType(type);
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
-  const handleRetry = () => {
-    fetchData();
+  const handleLogout = () => {
+    localStorage.removeItem('currentUser');
+    window.location.href = '/';
   };
+
+  if (!user) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="portfolio-container">
-      <header className="header">
-        <div className="logo">
-          <h1>BetIQ</h1>
-        </div>
-        <nav className="nav">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/teams" className="nav-link">Teams</Link>
-          <Link to="/place-bet" className="nav-link">Place Bet</Link>
-          <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
-          <Link to="/portfolio" className="nav-link active">Portfolio</Link>
-        </nav>
-        <div className="user-info">
-          <span className="user-name">John Doe</span>
-          <div className="dropdown-content">
-            <Link to="/profile">Profile</Link>
-            <Link to="/settings">Settings</Link>
-            <a href="#" onClick={() => console.log('Logout')}>Logout</a>
-          </div>
+      <header className="portfolio-header">
+        <div className="header-content">
+          <Link to="/leaderboard" className="back-button">← Back to Leaderboard</Link>
+          <h1>{isOwnProfile ? 'My Portfolio' : `${user.name}'s Portfolio`}</h1>
+          {user && (
+            <div className="portfolio-stats">
+              <div className="stat-item">
+                <span className="stat-label">Total Profit:</span>
+                <span className={`stat-value ${portfolioData.totalProfit >= 0 ? 'positive' : 'negative'}`}>
+                  {formatCurrency(portfolioData.totalProfit)}
+                </span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Win Rate:</span>
+                <span className="stat-value">{portfolioData.winRate.toFixed(1)}%</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Total Bets:</span>
+                <span className="stat-value">{user.totalBets || 0}</span>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
-      <main className="main-content">
-        <section className="portfolio-header">
-          <h2>Portfolio Overview</h2>
-          <div className="portfolio-filters">
-            <button 
-              className={`filter-btn ${leaderboardType === 'global' ? 'active' : ''}`}
-              onClick={() => handleTabChange('global')}
-            >
-              Global Leaderboard
-            </button>
-            <button 
-              className={`filter-btn ${leaderboardType === 'weekly' ? 'active' : ''}`}
-              onClick={() => handleTabChange('weekly')}
-            >
-              Weekly Leaderboard
-            </button>
-          </div>
-        </section>
-
-        {loading ? (
-          <div className="loading">
-            <div className="loading-spinner"></div>
-            <p>Loading leaderboard data...</p>
-          </div>
-        ) : error ? (
-          <div className="error-message">
-            <p>{error}</p>
-            <button className="btn btn-primary" onClick={handleRetry}>
-              Try Again
-            </button>
-          </div>
-        ) : leaderboard.length === 0 ? (
-          <div className="no-data">
-            <p>No leaderboard data available</p>
-          </div>
-        ) : (
-          <div className="leaderboard-table">
-            <div className="table-header">
-              <div className="header-cell">Rank</div>
-              <div className="header-cell">Player</div>
-              <div className="header-cell">Points</div>
-              <div className="header-cell">Win Rate</div>
-            </div>
-            {leaderboard.map((player, index) => (
-              <div 
-                key={player.userId} 
-                className={`table-row ${index < 3 ? 'top-three' : ''}`}
-              >
-                <div className="cell rank-cell">
-                  {index < 3 ? (
-                    <div className={`medal medal-${index + 1}`}>
-                      {index + 1}
-                    </div>
-                  ) : (
-                    index + 1
-                  )}
-                </div>
-                <div className="cell">{player.name}</div>
-                <div className="cell">{player.points}</div>
-                <div className="cell">{player.winRate}%</div>
+      <section className="active-bets">
+        <h2>Active Bets</h2>
+        <div className="bets-grid">
+          {portfolioData.activeBets.map(bet => (
+            <div key={bet.id} className="bet-card">
+              <div className="bet-header">
+                <span className="bet-type">{bet.type}</span>
+                <span className="bet-date">{bet.date}</span>
               </div>
-            ))}
-          </div>
-        )}
-      </main>
+              <div className="bet-teams">
+                <span>{bet.team1}</span>
+                <span className="vs">vs</span>
+                <span>{bet.team2}</span>
+              </div>
+              <div className="bet-details">
+                <div className="detail-item">
+                  <span>Bet Amount:</span>
+                  <span>{formatCurrency(bet.betAmount)}</span>
+                </div>
+                <div className="detail-item">
+                  <span>Potential Win:</span>
+                  <span className="potential-win">{formatCurrency(bet.potentialWinnings)}</span>
+                </div>
+                <div className="detail-item">
+                  <span>Odds:</span>
+                  <span>{bet.odds}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="completed-bets">
+        <h2>Completed Bets</h2>
+        <div className="bets-grid">
+          {portfolioData.completedBets.map(bet => (
+            <div key={bet.id} className="bet-card">
+              <div className="bet-header">
+                <span className="bet-type">{bet.type}</span>
+                <span className="bet-date">{bet.date}</span>
+              </div>
+              <div className="bet-teams">
+                <span>{bet.team1}</span>
+                <span className="vs">vs</span>
+                <span>{bet.team2}</span>
+              </div>
+              <div className="bet-details">
+                <div className="detail-item">
+                  <span>Bet Amount:</span>
+                  <span>{formatCurrency(bet.betAmount)}</span>
+                </div>
+                <div className="detail-item">
+                  <span>Result:</span>
+                  <span className={`bet-result ${bet.result.toLowerCase()}`}>{bet.result}</span>
+                </div>
+                <div className="detail-item">
+                  <span>Profit/Loss:</span>
+                  <span className={bet.winnings > 0 ? 'positive' : 'negative'}>
+                    {formatCurrency(bet.winnings - bet.betAmount)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <footer className="footer">
-        <p>&copy; 2025 BetIQ. All rights reserved.</p>
+        <p>&copy; 2025 Sports Betting. All rights reserved.</p>
       </footer>
     </div>
   );

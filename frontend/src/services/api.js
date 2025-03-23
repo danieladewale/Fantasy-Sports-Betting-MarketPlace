@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = 'http://localhost:30011/api';
 
 // Create axios instance with default config
 const api = axios.create({
@@ -78,13 +78,27 @@ export const leaderboardService = {
 // Portfolio Services
 export const portfolioService = {
   getPortfolio: async () => {
-    const response = await api.get('/portfolio');
-    return response.data;
+    try {
+      const response = await api.get('/portfolio');
+      return response.data;
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED') {
+        throw new Error('Could not connect to server. Please check if the server is running.');
+      }
+      throw error.response?.data?.message || 'Failed to fetch portfolio data';
+    }
   },
 
   updatePortfolio: async (portfolioData) => {
-    const response = await api.put('/portfolio', portfolioData);
-    return response.data;
+    try {
+      const response = await api.put('/portfolio', portfolioData);
+      return response.data;
+    } catch (error) {
+      if (error.code === 'ECONNREFUSED') {
+        throw new Error('Could not connect to server. Please check if the server is running.');
+      }
+      throw error.response?.data?.message || 'Failed to update portfolio';
+    }
   },
 };
 

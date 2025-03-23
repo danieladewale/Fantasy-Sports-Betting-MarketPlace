@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-// Define the schema
+// Define the User schema
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -64,7 +64,10 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Create models (prevent duplicate compilation)
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
 // Export models
 module.exports = {
-    User: mongoose.models.User || mongoose.model('User', userSchema)
+    User
 }; 

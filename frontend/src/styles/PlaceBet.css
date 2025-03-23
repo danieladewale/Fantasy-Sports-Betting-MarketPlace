@@ -16,11 +16,6 @@
   z-index: 1000;
 }
 
-.logo {
-  height: 40px;
-  width: auto;
-}
-
 .nav {
   display: flex;
   gap: 2rem;
@@ -310,6 +305,35 @@
   padding: 2rem;
   text-align: center;
   margin-top: auto;
+}
+
+.profit-engineer-name {
+  color: #ffffff !important;  /* Force white text */
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);  /* Add text shadow for better contrast */
+}
+
+.profit-engineer-info {
+  background: rgba(29, 66, 138, 0.9);  /* Darker semi-transparent blue background */
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.profit-engineer-stats {
+  color: #e2e8f0;  /* Light gray for stats */
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Add specific color overrides for any parent elements that might be affecting the text color */
+.match-card .profit-engineer-name,
+.bet-form .profit-engineer-name,
+.main-content .profit-engineer-name {
+  color: #ffffff !important;
 }
 
 @media (max-width: 768px) {

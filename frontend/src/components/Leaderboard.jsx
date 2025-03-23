@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import logo from '../assets/images/betiq-logo.svg';
 import '../styles/Leaderboard.css';
 
 const Leaderboard = () => {
@@ -11,6 +10,7 @@ const Leaderboard = () => {
   const [timeFrame, setTimeFrame] = useState('all'); // all, weekly, monthly
   const [sortBy, setSortBy] = useState('winnings'); // winnings, rank, lastBet
   const [showDropdown, setShowDropdown] = useState(false);
+  const [leaderboardType, setLeaderboardType] = useState('global');
 
   useEffect(() => {
     checkLoginStatus();
@@ -28,18 +28,34 @@ const Leaderboard = () => {
   };
 
   const fetchLeaderboardData = () => {
-    // Simulated API call - in a real app, this would fetch from your backend
-    const mockData = [
-      { id: 1, rank: 1, name: 'John Doe', winnings: 500, lastBet: 'Game 1 - Moneyline' },
-      { id: 2, rank: 2, name: 'Jane Smith', winnings: 450, lastBet: 'Game 2 - Spread' },
-      { id: 3, rank: 3, name: 'Bob Lee', winnings: 400, lastBet: 'Game 3 - Over/Under' },
-      { id: 4, rank: 4, name: 'Alice Johnson', winnings: 350, lastBet: 'Game 4 - Parlay' },
-      { id: 5, rank: 5, name: 'Charlie Brown', winnings: 300, lastBet: 'Game 5 - Prop Bet' },
-    ];
+    // Simulated API call with different data for different timeframes
+    const mockDataByTimeFrame = {
+      all: [
+        { id: 1, rank: 1, name: 'Michael Jordan', winnings: 150000, lastBet: 'Lakers vs Warriors - Spread' },
+        { id: 2, rank: 2, name: 'Tom Brady', winnings: 125000, lastBet: 'Chiefs vs Bills - Moneyline' },
+        { id: 3, rank: 3, name: 'LeBron James', winnings: 98000, lastBet: 'Celtics vs Nets - Over/Under' },
+        { id: 4, rank: 4, name: 'Patrick Mahomes', winnings: 85000, lastBet: 'Eagles vs Cowboys - Spread' },
+        { id: 5, rank: 5, name: 'Stephen Curry', winnings: 72000, lastBet: 'Warriors vs Suns - Player Props' }
+      ],
+      weekly: [
+        { id: 1, rank: 1, name: 'Kevin Durant', winnings: 25000, lastBet: 'Nets vs 76ers - First Quarter' },
+        { id: 2, rank: 2, name: 'Josh Allen', winnings: 18500, lastBet: 'Bills vs Jets - Total Points' },
+        { id: 3, rank: 3, name: 'Ja Morant', winnings: 15000, lastBet: 'Grizzlies vs Pelicans - Spread' },
+        { id: 4, rank: 4, name: 'Justin Herbert', winnings: 12000, lastBet: 'Chargers vs Raiders - Moneyline' },
+        { id: 5, rank: 5, name: 'Luka Doncic', winnings: 10000, lastBet: 'Mavericks vs Clippers - Player Props' }
+      ],
+      monthly: [
+        { id: 1, rank: 1, name: 'Giannis A.', winnings: 75000, lastBet: 'Bucks vs Heat - Double Result' },
+        { id: 2, rank: 2, name: 'Aaron Rodgers', winnings: 62000, lastBet: 'Jets vs Patriots - First TD' },
+        { id: 3, rank: 3, name: 'Nikola Jokic', winnings: 55000, lastBet: 'Nuggets vs Lakers - Spread' },
+        { id: 4, rank: 4, name: 'Lamar Jackson', winnings: 48000, lastBet: 'Ravens vs Bengals - Over/Under' },
+        { id: 5, rank: 5, name: 'Devin Booker', winnings: 42000, lastBet: 'Suns vs Kings - First Half' }
+      ]
+    };
 
     // Simulate API delay
     setTimeout(() => {
-      setLeaderboardData(mockData);
+      setLeaderboardData(mockDataByTimeFrame[timeFrame]);
       setIsLoading(false);
     }, 1000);
   };
@@ -91,7 +107,6 @@ const Leaderboard = () => {
   return (
     <div className="leaderboard-container">
       <header className="header">
-        <img src={logo} alt="logo" className="logo" />
         <nav className="nav">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/teams" className="nav-link">Teams</Link>
@@ -162,7 +177,23 @@ const Leaderboard = () => {
               {leaderboardData.map((user) => (
                 <tr key={user.id} className={user.id === 1 ? 'top-player' : ''}>
                   <td>{user.rank}</td>
-                  <td>{user.name}</td>
+                  <td>
+                    <Link 
+                      to={`/portfolio/${user.id}`} 
+                      className="player-link"
+                      onClick={(e) => {
+                        // Store the user data in localStorage for the portfolio
+                        localStorage.setItem('viewedUser', JSON.stringify({
+                          id: user.id,
+                          name: user.name,
+                          totalBets: Math.floor(Math.random() * 200) + 50,
+                          winRate: Math.random() * 100
+                        }));
+                      }}
+                    >
+                      {user.name}
+                    </Link>
+                  </td>
                   <td>${user.winnings.toLocaleString()}</td>
                   <td>{user.lastBet}</td>
                 </tr>

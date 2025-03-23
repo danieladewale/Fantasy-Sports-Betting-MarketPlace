@@ -1,0 +1,161 @@
+.settings-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.settings-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.settings-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.settings-content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.message.success {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+}
+
+.message.error {
+  background: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.settings-section {
+  margin-bottom: 2.5rem;
+}
+
+.settings-section h2 {
+  color: #1a1a2e;
+  font-size: 1.25rem;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #f0f2f5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1a1a2e;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.checkbox-group {
+  margin-bottom: 1rem;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  color: #1a1a2e;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #f0f2f5;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #f0f2f5;
+}
+
+.save-button,
+.cancel-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-button {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  flex: 1;
+}
+
+.save-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.cancel-button {
+  background: #f0f2f5;
+  color: #666;
+}
+
+.cancel-button:hover {
+  background: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 1rem;
+  }
+
+  .settings-content {
+    padding: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .save-button,
+  .cancel-button {
+    width: 100%;
+  }
+} 

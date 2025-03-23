@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import logo from '../assets/images/betiq-logo.svg';
 import '../styles/CashOut.css';
 
 const CashOut = ({ initialBalance = 1000 }) => {
@@ -50,7 +49,6 @@ const CashOut = ({ initialBalance = 1000 }) => {
   return (
     <div className="cashout-container">
       <header className="header">
-        <img src={logo} alt="logo" className="logo" />
         <nav className="nav">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/teams" className="nav-link">Teams</Link>

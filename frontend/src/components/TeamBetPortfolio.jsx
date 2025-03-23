@@ -138,8 +138,7 @@ const TeamBetPortfolio = () => {
   return (
     <div className="team-portfolio-container">
       <header className="header">
-        <div className="logo-container">
-          <div className="logo">BET</div>
+        <div className="back-button-container">
           <Link to="/teams" className="back-button">
             <span>←</span>
             <span>Back to Teams</span>
