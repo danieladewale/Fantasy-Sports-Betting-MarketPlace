@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Place Your Bet</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="icon" href="images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* General Styles */
+    body {
+      background-color: #f0f0f0;
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #28a745;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logo {
+      max-width: 150px;
+    }
+
+    nav a, .auth-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    nav a:hover, .auth-links a:hover {
+      color: #e3e3e3;
+    }
+
+    .active {
+      color: blue;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 2rem;
+      background-color: #ffffff;
+      margin: 20px auto;
+      max-width: 800px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #28a745;
+      color: white;
+    }
+
+    /* Bet Form Styles */
+    .bet-form {
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .bet-form h2 {
+      font-size: 1.2rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    .bet-form select, .bet-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .bet-form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .bet-form button:hover {
+      background-color: #218838;
+    }
+
+    /* Bet Details Section */
+    .bet-details {
+      margin-top: 2rem;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .bet-details h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    .match-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background-color: white;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .team {
+      flex: 1;
+      text-align: center;
+    }
+
+    .team-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .vs {
+      font-weight: bold;
+      padding: 0 10px;
+      color: #777;
+    }
+
+    .odds {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .odds-item {
+      flex: 1;
+      text-align: center;
+      background-color: white;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 0 5px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+    }
+
+    .odds-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .odds-item.selected {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    .odds-value {
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    /* User Info Dropdown */
+    .user-info {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 5px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .user-info:hover .dropdown-content {
+      display: block;
+    }
+
+    .user-name {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-name i {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Header Section -->
+<header>
+  <img src="images/fantasysportsbettinglogo.svg" alt="logo" class="logo" />
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#place-bet" class="active">Place Your Bet</a>
+    <a href="#leaderboard">Leaderboard</a>
+    <a href="#portfolios">Portfolios</a>
+    <a href="#cash-out">Cash Out</a>
+  </nav>
+
+  <div class="auth-links" id="authLinks">
+    <a onclick="openLoginScreen()">Login</a>
+    <a onclick="openRegisterScreen()">Register</a>
+  </div>
+
+  <div class="user-info" id="userInfo" style="display: none;">
+    <div class="user-name">
+      <span id="userName"></span>
+      <i class="fa fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+      <a href="#profile">My Profile</a>
+      <a href="#settings">Settings</a>
+      <a href="teams.html">Edit Teams</a>
+      <a href="#" onclick="logoutUser()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>Place Your Bet</h1>
+
+  <div class="bet-details">
+    <h2>Game Details</h2>
+    <div class="match-info" id="matchInfo">
+      <!-- Match info will be inserted here -->
+    </div>
+    
+    <h2>Bet Type</h2>
+    <div class="odds">
+      <div class="odds-item" onclick="selectBetType(this, 'moneyline-home')">
+        <div>Home Win</div>
+        <div class="odds-value" id="homeOdds">-110</div>
+      </div>
+      <div class="odds-item" onclick="selectBetType(this, 'moneyline-away')">
+        <div>Away Win</div>
+        <div class="odds-value" id="awayOdds">+120</div>
+      </div>
+      <div class="odds-item" onclick="selectBetType(this, 'spread')">
+        <div>Spread</div>
+        <div class="odds-value">-4.5</div>
+      </div>
+      <div class="odds-item" onclick="selectBetType(this, 'over-under')">
+        <div>Over/Under</div>
+        <div class="odds-value">224.5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bet-form">
+    <h2>Bet Amount</h2>
+    <input type="number" id="betAmount" placeholder="Enter Bet Amount" min="1" />
+
+    <div id="potentialWinnings" style="margin-top: 10px; font-weight: bold; display: none;">
+      Potential Winnings: $<span id="winningsAmount">0.00</span>
+    </div>
+
+    <button id="placeBetButton" onclick="placeBet()">Place Bet</button>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Fantasy Sports Betting. All rights reserved.</p>
+</footer>
+
+<script>
+  // Check if user is already logged in on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    checkLoginStatus();
+    loadBetDetails();
+  });
+
+  function checkLoginStatus() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (currentUser) {
+      // User is logged in
+      document.getElementById('authLinks').style.display = 'none';
+      document.getElementById('userInfo').style.display = 'block';
+      document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+    } else {
+      // User is not logged in, redirect to login
+      alert('Please login to place a bet');
+      window.location.href = 'index.html';
+    }
+  }
+
+  function loadBetDetails() {
+    // Get match details from localStorage (passed from index.html)
+    const matchDetails = JSON.parse(localStorage.getItem('selectedMatch'));
+    console.log('Match Details:', matchDetails); // Debug log
+    
+    if (!matchDetails || !matchDetails.homeTeam || !matchDetails.awayTeam) {
+      // If no match details or invalid data, show error message
+      document.getElementById('matchInfo').innerHTML = `
+        <div class="team">
+          <div class="team-name">Please select a match from the home page</div>
+        </div>
+      `;
+      document.getElementById('placeBetButton').disabled = true;
+      return;
+    }
+    
+    // Display match details
+    document.getElementById('matchInfo').innerHTML = `
+      <div class="team">
+        <div class="team-name">${matchDetails.homeTeam}</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="team">
+        <div class="team-name">${matchDetails.awayTeam}</div>
+      </div>
+      <div class="match-details" style="margin-top: 15px; text-align: center;">
+        <span class="league-badge ${matchDetails.league.toLowerCase()}">${matchDetails.league}</span>
+        <div class="match-datetime">
+          ${matchDetails.date}
+        </div>
+      </div>
+    `;
+    
+    // Generate random odds
+    const homeOddsValue = Math.random() < 0.5 ? -Math.floor(Math.random() * 150 + 100) : Math.floor(Math.random() * 200 + 100);
+    const awayOddsValue = homeOddsValue < 0 ? Math.floor(Math.random() * 200 + 100) : -Math.floor(Math.random() * 150 + 100);
+    
+    document.getElementById('homeOdds').textContent = homeOddsValue > 0 ? `+${homeOddsValue}` : homeOddsValue;
+    document.getElementById('awayOdds').textContent = awayOddsValue > 0 ? `+${awayOddsValue}` : awayOddsValue;
+    
+    // Enable the place bet button
+    document.getElementById('placeBetButton').disabled = false;
+  }
+
+  function selectBetType(element, type) {
+    // Remove selected class from all odds items
+    document.querySelectorAll('.odds-item').forEach(item => {
+      item.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked item
+    element.classList.add('selected');
+    
+    // Store selected bet type
+    localStorage.setItem('selectedBetType', type);
+    
+    // Show potential winnings based on bet amount and selected odds
+    calculatePotentialWinnings();
+  }
+
+  function calculatePotentialWinnings() {
+    const betAmount = parseFloat(document.getElementById('betAmount').value) || 0;
+    const selectedBetType = localStorage.getItem('selectedBetType');
+    let oddsValue = 0;
+    
+    if (selectedBetType === 'moneyline-home') {
+      oddsValue = parseInt(document.getElementById('homeOdds').textContent);
+    } else if (selectedBetType === 'moneyline-away') {
+      oddsValue = parseInt(document.getElementById('awayOdds').textContent);
+    } else {
+      oddsValue = -110; // Default odds for spread and over/under
+    }
+    
+    let winnings = 0;
+    if (oddsValue > 0) {
+      // Positive odds (e.g. +120) means you win $120 for every $100 wagered
+      winnings = betAmount * (oddsValue / 100);
+    } else {
+      // Negative odds (e.g. -110) means you must wager $110 to win $100
+      winnings = betAmount * (100 / Math.abs(oddsValue));
+    }
+    
+    // Add original bet amount to winnings
+    winnings += betAmount;
+    
+    // Display potential winnings
+    document.getElementById('potentialWinnings').style.display = 'block';
+    document.getElementById('winningsAmount').textContent = winnings.toFixed(2);
+  }
+
+  // Update potential winnings when bet amount changes
+  document.getElementById('betAmount').addEventListener('input', calculatePotentialWinnings);
+
+  function placeBet() {
+    const betAmount = parseFloat(document.getElementById('betAmount').value);
+    const selectedBetType = localStorage.getItem('selectedBetType');
+    const matchDetails = JSON.parse(localStorage.getItem('selectedMatch'));
+    
+    if (!betAmount || isNaN(betAmount) || betAmount <= 0) {
+      alert('Please enter a valid bet amount');
+      return;
+    }
+    
+    if (!selectedBetType) {
+      alert('Please select a bet type');
+      return;
+    }
+    
+    if (!matchDetails) {
+      alert('No match selected');
+      return;
+    }
+    
+    // Create bet object
+    const bet = {
+      matchDetails: matchDetails,
+      betType: selectedBetType,
+      amount: betAmount,
+      timestamp: new Date().toISOString(),
+      potentialWinnings: parseFloat(document.getElementById('winningsAmount').textContent)
+    };
+    
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    // Get user's bets or create new array
+    const userBetsKey = `bets_${currentUser.email}`;
+    const userBets = JSON.parse(localStorage.getItem(userBetsKey)) || [];
+    
+    // Add new bet
+    userBets.push(bet);
+    
+    // Save updated bets
+    localStorage.setItem(userBetsKey, JSON.stringify(userBets));
+    
+    alert('Bet placed successfully!');
+    
+    // Redirect to home or another page
+    window.location.href = 'index.html';
+  }
+
+  function logoutUser() {
+    // Remove current user from localStorage
+    localStorage.removeItem('currentUser');
+    
+    // Redirect to home page
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>
