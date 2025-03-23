@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cash Out</title>
+  <link rel="stylesheet" href="style/style.css" />
+</head>
+<body>
+
+<header>
+  <img src="images/fantasysportsbettinglogo.svg" alt="logo" class="logo" />
+  <nav>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="teams.html" class="nav-link">Teams</a>
+    <a href="place-bet.html" class="nav-link">Place Bet</a>
+    <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Cash Out</h1>
+
+  <div class="cash-out-form">
+    <h2>Available Winnings</h2>
+    <p id="winningsAmount">$0</p>
+
+    <h2>Amount to Cash Out</h2>
+    <input type="number" id="cashOutAmount" placeholder="Enter Amount" />
+
+    <button onclick="processCashOut()">Cash Out</button>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Fantasy Sports Betting. All rights reserved.</p>
+</footer>
+
+<script>
+  function processCashOut() {
+    const cashOutAmount = document.getElementById('cashOutAmount').value;
+    const availableWinnings = parseFloat(document.getElementById('winningsAmount').textContent.replace('$', ''));
+
+    if (cashOutAmount > availableWinnings) {
+      alert('Insufficient funds to cash out!');
+    } else {
+      alert(`You have successfully cashed out $${cashOutAmount}`);
+    }
+  }
+</script>
+
+</body>
+</html>
