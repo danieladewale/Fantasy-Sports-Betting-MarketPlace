@@ -1,28 +1,45 @@
 const express = require('express');
 const router = express.Router();
-const ProfitEngineer = require('../models/ProfitEngineer');
+const User = require('../models/user');
 
-// Endpoint to get the leaderboard of the top profit engineers
+// Leaderboard Route with Sorting & Search Functionality
 router.get('/', async (req, res) => {
     try {
-        // Fetching top 10 Profit Engineers based on totalProfit, in descending order
-        const leaderboard = await ProfitEngineer.find()
-            .sort({ totalProfit: -1 }) // Sort by totalProfit in descending order
-            .limit(10); // Limit to top 10 Profit Engineers
+        // Get search query parameters (if provided)
+        const { name, minWinRate, maxWinRate, minProfit, maxProfit, sortBy, order } = req.query;
 
-        // Sending the leaderboard response
-        res.status(200).json({
-            success: true,
-            message: 'Top profit engineers fetched successfully!',
-            leaderboard: leaderboard
-        });
+        // Build the filter object
+        let filter = {};
+
+        if (name) {
+            filter.name = { $regex: name, $options: 'i' }; // case-insensitive search
+        }
+
+        if (minWinRate || maxWinRate) {
+            filter['performance.winRate'] = {};
+            if (minWinRate) filter['performance.winRate'].$gte = minWinRate;
+            if (maxWinRate) filter['performance.winRate'].$lte = maxWinRate;
+        }
+
+        if (minProfit || maxProfit) {
+            filter['performance.totalProfit'] = {};
+            if (minProfit) filter['performance.totalProfit'].$gte = minProfit;
+            if (maxProfit) filter['performance.totalProfit'].$lte = maxProfit;
+        }
+
+        // Build the sorting object based on query params
+        let sort = {};
+        if (sortBy) {
+            sort[sortBy] = order === 'desc' ? -1 : 1; // Default ascending order, or descending if specified
+        }
+
+        // Fetch users from DB based on filters and sorting
+        const users = await User.find(filter).sort(sort);
+
+        res.json(users);
     } catch (err) {
         console.error('Error fetching leaderboard:', err);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching leaderboard.',
-            error: err.message
-        });
+        res.status(500).send('Server error');
     }
 });
 
