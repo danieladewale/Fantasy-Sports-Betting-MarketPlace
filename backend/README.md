@@ -1,1 +1,3 @@
-# Fantasy-Sports-Betting-MarketPlace
+# BetIQ Backend
+
+Backend server for the BetIQ sports betting platform.

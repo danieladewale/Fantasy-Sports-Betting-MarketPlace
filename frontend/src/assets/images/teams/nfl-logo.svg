@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" fill="#FFFFFF"/>
+  <path d="M60 10C32.4 10 10 32.4 10 60s22.4 50 50 50 50-22.4 50-50S87.6 10 60 10z" fill="#013369"/>
+  <path d="M85 40H35c-2.8 0-5 2.2-5 5v30c0 2.8 2.2 5 5 5h50c2.8 0 5-2.2 5-5V45c0-2.8-2.2-5-5-5z" fill="#FFFFFF"/>
+  <path d="M40 50l10 10-10 10M80 50L70 60l10 10" fill="none" stroke="#D50A0A" stroke-width="3"/>
+  <text x="60" y="65" font-family="Arial" font-size="16" font-weight="bold" fill="#013369" text-anchor="middle">NFL</text>
+</svg> 

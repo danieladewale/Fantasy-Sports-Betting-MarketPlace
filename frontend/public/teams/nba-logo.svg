@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" fill="#FFFFFF"/>
+  <circle cx="60" cy="60" r="55" fill="#17408B"/>
+  <path d="M35 40 L85 40 L85 80 L35 80 Z" fill="#FFFFFF"/>
+  <text x="60" y="70" font-family="Arial Black" font-size="28" fill="#C9082A" text-anchor="middle">NBA</text>
+</svg> 

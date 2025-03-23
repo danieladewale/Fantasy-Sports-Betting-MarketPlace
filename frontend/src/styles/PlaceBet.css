@@ -1,0 +1,359 @@
+.place-bet-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: var(--gradient-primary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  flex: 1;
+}
+
+.place-bet-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.place-bet-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.place-bet-header p {
+  font-size: 1.1rem;
+  color: var(--neutral-600);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.betting-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.match-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+}
+
+.match-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.match-header {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.match-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.team {
+  flex: 1;
+  text-align: center;
+}
+
+.team-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.odds-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--success-color);
+}
+
+.vs {
+  font-weight: 600;
+  padding: 0 1rem;
+  color: var(--neutral-500);
+}
+
+.match-details {
+  padding: 1rem 1.5rem;
+  background: var(--neutral-50);
+}
+
+.match-date, .match-time {
+  color: var(--neutral-600);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.bet-form {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.bet-form h2 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: var(--neutral-700);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.bet-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.potential-winnings {
+  background: var(--success-light);
+  color: var(--success-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  margin: 1rem 0;
+  font-weight: 600;
+}
+
+.place-bet-btn {
+  width: 100%;
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.place-bet-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.place-bet-btn:disabled {
+  background: var(--neutral-300);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* User Info Dropdown */
+.user-info {
+  position: relative;
+}
+
+.user-name {
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.user-name:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  display: none;
+  z-index: 1000;
+}
+
+.dropdown-content.show {
+  display: block;
+  animation: slideUp 0.2s ease-out;
+}
+
+.dropdown-content a {
+  color: var(--neutral-800);
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background: var(--neutral-100);
+  color: var(--accent-color);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: var(--neutral-600);
+}
+
+/* Error Message */
+.error-message {
+  background: var(--error-light);
+  color: var(--error-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Success Message */
+.success-message {
+  background: var(--success-light);
+  color: var(--success-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Footer */
+.footer {
+  background: var(--primary-dark);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .user-info {
+    width: 100%;
+    text-align: center;
+  }
+
+  .dropdown-content {
+    width: 100%;
+    position: static;
+    display: none;
+    box-shadow: none;
+  }
+
+  .user-info:hover .dropdown-content {
+    display: block;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .match-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .vs {
+    padding: 1rem 0;
+  }
+
+  .odds {
+    flex-direction: column;
+  }
+} 

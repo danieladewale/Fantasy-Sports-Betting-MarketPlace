@@ -1,25 +1,104 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoute = require('./routes/auth'); // Import authentication routes
 const leaderboardRoute = require('./routes/leaderboard'); // Import leaderboard route
 const protect = require('./middleware/authMiddleware'); // Import protection middleware
+const { User } = require('./models');
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Middleware to parse JSON bodies
+// Middleware
+app.use(cors());
 app.use(express.json());
 
-// Use authentication and leaderboard routes
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/betiq', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(async () => {
+  console.log('✅ Connected to MongoDB successfully');
+  
+  try {
+    // Add mock data if no users exist
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      const mockUsers = [
+        { firstName: 'John', lastName: 'Doe', email: 'john@example.com', password: 'password123', points: 1200, winRate: 65 },
+        { firstName: 'Jane', lastName: 'Smith', email: 'jane@example.com', password: 'password123', points: 1100, winRate: 60 },
+        { firstName: 'Mike', lastName: 'Johnson', email: 'mike@example.com', password: 'password123', points: 1000, winRate: 55 },
+        { firstName: 'Sarah', lastName: 'Wilson', email: 'sarah@example.com', password: 'password123', points: 900, winRate: 50 },
+        { firstName: 'Tom', lastName: 'Brown', email: 'tom@example.com', password: 'password123', points: 800, winRate: 45 }
+      ];
+      await User.insertMany(mockUsers);
+      console.log('✅ Added mock users for testing');
+    }
+  } catch (error) {
+    console.error('Error adding mock data:', error);
+  }
+})
+.catch((err) => {
+  console.error('❌ MongoDB connection error:', err);
+});
+
+// Make User model available to routes
+app.set('userModel', User);
+
+// Routes
 app.use('/api/auth', authRoute); // Authentication routes for register and login
 app.use('/api/leaderboard', leaderboardRoute); // Leaderboard route, protected
 
+// Leaderboard Routes
+app.get('/api/leaderboard/global', async (req, res) => {
+  try {
+    const globalUsers = await User.find()
+      .sort({ points: -1 })
+      .select('firstName lastName points winRate');
+    
+    const leaderboard = globalUsers.map((user, index) => ({
+      userId: user._id,
+      name: `${user.firstName} ${user.lastName}`,
+      points: user.points || 0,
+      winRate: user.winRate || 0,
+      rank: index + 1
+    }));
+    
+    res.json(leaderboard);
+  } catch (error) {
+    console.error('Global leaderboard error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+app.get('/api/leaderboard/weekly', async (req, res) => {
+  try {
+    const weeklyUsers = await User.find()
+      .sort({ weeklyPoints: -1 })
+      .select('firstName lastName weeklyPoints winRate');
+    
+    const leaderboard = weeklyUsers.map((user, index) => ({
+      userId: user._id,
+      name: `${user.firstName} ${user.lastName}`,
+      points: user.weeklyPoints || 0,
+      winRate: user.winRate || 0,
+      rank: index + 1
+    }));
+    
+    res.json(leaderboard);
+  } catch (error) {
+    console.error('Weekly leaderboard error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 // Basic route for testing
 app.get('/', (req, res) => {
-    res.send('Fantasy Sports Betting Marketplace Backend is running!');
+  res.send('BetIQ Backend is running!');
 });
 
 // Protected route for testing user info (requires authentication)
@@ -27,18 +106,28 @@ app.get('/api/protected', protect, (req, res) => {
     res.json({ message: 'This is a protected route', user: req.user });
 });
 
-// Connect to MongoDB (assumes Mongo URI is in your .env file)
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    console.log('✅ Connected to MongoDB successfully');
-}).catch((err) => {
-    console.error('❌ Failed to connect to MongoDB:', err);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something broke!', error: err.message });
 });
 
-// Define PORT and start server
-const PORT = process.env.PORT || 4001;
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-});
+// Start server
+const PORT = process.env.PORT || 5000;
+
+// Function to start server
+const startServer = (port) => {
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`❌ Port ${port} is in use, trying port ${port + 1}`);
+      startServer(port + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+};
+
+// Start the server
+startServer(PORT);

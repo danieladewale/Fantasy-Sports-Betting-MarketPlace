@@ -1,0 +1,325 @@
+.cash-out-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: var(--gradient-primary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  flex: 1;
+}
+
+.cash-out-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cash-out-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.cash-out-header p {
+  font-size: 1.1rem;
+  color: var(--neutral-600);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.balance-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 1.1rem;
+  color: var(--neutral-600);
+  margin-bottom: 0.5rem;
+}
+
+.balance-amount {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--success-color);
+  margin-bottom: 1rem;
+}
+
+.balance-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.withdraw-btn {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.withdraw-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.withdraw-btn:disabled {
+  background: var(--neutral-300);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.deposit-btn {
+  background: white;
+  color: var(--primary-dark);
+  border: 2px solid var(--primary-dark);
+}
+
+.deposit-btn:hover {
+  background: var(--primary-dark);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.transaction-history {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.transaction-header {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  font-weight: 600;
+}
+
+.transaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--neutral-200);
+  transition: all 0.2s ease;
+}
+
+.transaction-row:hover {
+  background: var(--neutral-50);
+}
+
+.transaction-date {
+  color: var(--neutral-600);
+}
+
+.transaction-type {
+  font-weight: 500;
+}
+
+.transaction-amount {
+  font-weight: 600;
+}
+
+.transaction-amount.positive {
+  color: var(--success-color);
+}
+
+.transaction-amount.negative {
+  color: var(--error-color);
+}
+
+.transaction-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-completed {
+  background: var(--success-light);
+  color: var(--success-dark);
+}
+
+.status-pending {
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.status-failed {
+  background: var(--error-light);
+  color: var(--error-dark);
+}
+
+/* User Info Dropdown */
+.user-info {
+  position: relative;
+}
+
+.user-name {
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.user-name:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  display: none;
+  z-index: 1000;
+}
+
+.dropdown-content.show {
+  display: block;
+  animation: slideUp 0.2s ease-out;
+}
+
+.dropdown-content a {
+  color: var(--neutral-800);
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background: var(--neutral-100);
+  color: var(--accent-color);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: var(--neutral-600);
+}
+
+/* Error Message */
+.error-message {
+  background: var(--error-light);
+  color: var(--error-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Success Message */
+.success-message {
+  background: var(--success-light);
+  color: var(--success-dark);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Footer */
+.footer {
+  background: var(--primary-dark);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .transaction-header {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .transaction-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .transaction-date,
+  .transaction-type {
+    display: none;
+  }
+
+  .balance-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+} 
