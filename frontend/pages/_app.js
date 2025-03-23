@@ -21,3 +21,8 @@ import Leaderboard from './components/Leaderboard';
 
 // In your router configuration
 <Route path="/leaderboard" element={<Leaderboard />} />
+
+import Home from './components/Home';
+
+// In your router configuration
+<Route path="/" element={<Home />} />
