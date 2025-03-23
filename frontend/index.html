@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fantasy Sports Betting</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="icon" href="images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* General Styles */
+    body {
+      background-color: #f0f0f0;
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #28a745;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logo {
+      max-width: 150px;
+    }
+
+    nav a, .auth-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    nav a:hover, .auth-links a:hover {
+      color: #e3e3e3;
+    }
+
+    .active {
+      color: blue;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 2rem;
+      background-color: #ffffff;
+      margin: 20px auto;
+      max-width: 1100px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .hero {
+      background-color: #28a745;
+      padding: 3rem;
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .btn {
+      background-color: blue;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #28a745;
+      color: white;
+    }
+
+    /* Form Screens */
+    .form-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .form-box {
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      width: 400px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .form-box h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .form-box input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-box button {
+      width: 100%;
+      padding: 10px;
+      background: #4285f4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .form-box button:hover {
+      background: #357ae8;
+    }
+
+    .close-btn {
+      color: #555;
+      float: right;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: red;
+    }
+
+    /* User Info Dropdown */
+    .user-info {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 5px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .user-info:hover .dropdown-content {
+      display: block;
+    }
+
+    .user-name {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .user-name i {
+      margin-left: 5px;
+    }
+
+    /* Upcoming Bets Section */
+    .upcoming-bets {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .upcoming-bets h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .match-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .match-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .match-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .match-teams {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .team {
+      flex: 1;
+      text-align: center;
+    }
+
+    .team-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .vs {
+      font-weight: bold;
+      padding: 0 10px;
+      color: #777;
+    }
+
+    .match-details {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .match-datetime {
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .league-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .nba {
+      background-color: #c8102e;
+      color: white;
+    }
+
+    .nfl {
+      background-color: #013369;
+      color: white;
+    }
+
+    .bet-button {
+      width: 100%;
+      padding: 8px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .bet-button:hover {
+      background-color: #218838;
+    }
+
+    .empty-selection {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Header Section -->
+<header>
+  <img src="images/fantasysportsbettinglogo.svg" alt="logo" class="logo" />
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="place-bet.html" class="nav-link" onclick="activateLink(this)">Place Your Bet</a>
+    <a href="#leaderboard" class="nav-link" onclick="activateLink(this)">Leaderboard</a>
+    <a href="#portfolios" class="nav-link" onclick="activateLink(this)">Portfolios</a>
+    <a href="#cash-out" class="nav-link" onclick="activateLink(this)">Cash Out</a>
+  </nav>
+
+  <div class="auth-links" id="authLinks">
+    <a onclick="openLoginScreen()">Login</a>
+    <a onclick="openRegisterScreen()">Register</a>
+  </div>
+
+  <div class="user-info" id="userInfo" style="display: none;">
+    <div class="user-name">
+      <span id="userName"></span>
+      <i class="fa fa-caret-down"></i>
+    </div>
+    <div class="dropdown-content">
+      <a href="#profile">My Profile</a>
+      <a href="#settings">Settings</a>
+      <a href="teams.html">Edit Teams</a>
+      <a href="#" onclick="logoutUser()">Logout</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Get up to $100 in Bonus Bets</h1>
+    <p>Minimum Deposit: $5. First Deposit matched up to $25. Terms apply</p>
+    <button class="btn" id="heroButton" onclick="openRegisterScreen()">Join Now</button>
+  </section>
+
+  <!-- Upcoming Bets Section -->
+  <section class="upcoming-bets" id="upcomingBets">
+    <h2>Upcoming Bets For Your Teams</h2>
+    <div id="matchesContainer" class="match-grid">
+      <!-- Matches will be dynamically inserted here -->
+    </div>
+  </section>
+</main>
+
+<!-- Login Screen -->
+<div class="form-screen" id="loginScreen">
+  <div class="form-box">
+    <span class="close-btn" onclick="closeLoginScreen()">&times;</span>
+    <h2>Login</h2>
+    <form id="loginForm" onsubmit="loginUser(event)">
+      <input type="email" name="email" placeholder="Enter your email" required />
+      <input type="password" name="password" placeholder="Enter your password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<!-- Registration Screen -->
+<div class="form-screen" id="registerScreen">
+  <div class="form-box">
+    <span class="close-btn" onclick="closeRegisterScreen()">&times;</span>
+    <h2>Create Your Account</h2>
+    <form onsubmit="saveUserData(event)">
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="tel" name="phone" placeholder="Phone Number" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" required />
+      <button type="submit">Register</button>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Fantasy Sports Betting. All rights reserved.</p>
+</footer>
+
+<script>
+  // Check if user is already logged in on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    checkLoginStatus();
+    generateUpcomingBets();
+  });
+
+  function checkLoginStatus() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const heroButton = document.getElementById('heroButton');
+    
+    if (currentUser) {
+      // User is logged in, show user info and hide auth links
+      document.getElementById('authLinks').style.display = 'none';
+      document.getElementById('userInfo').style.display = 'block';
+      document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+      
+      // Change hero button text for logged in users
+      if (heroButton) {
+        heroButton.textContent = 'Place a Bet';
+        heroButton.onclick = function() {
+          window.location.href = 'place-bet.html';
+        };
+      }
+      
+      // Show upcoming bets section
+      document.getElementById('upcomingBets').style.display = 'block';
+    } else {
+      // User is not logged in, show auth links and hide user info
+      document.getElementById('authLinks').style.display = 'block';
+      document.getElementById('userInfo').style.display = 'none';
+      
+      // Reset hero button for non-logged in users
+      if (heroButton) {
+        heroButton.textContent = 'Join Now';
+        heroButton.onclick = openRegisterScreen;
+      }
+      
+      // Hide upcoming bets section
+      document.getElementById('upcomingBets').style.display = 'none';
+    }
+  }
+
+  function generateUpcomingBets() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Get user's selected teams
+    const userTeamsKey = `selectedTeams_${currentUser.email}`;
+    const selectedTeams = JSON.parse(localStorage.getItem(userTeamsKey)) || [];
+    
+    const matchesContainer = document.getElementById('matchesContainer');
+    matchesContainer.innerHTML = '';
+    
+    if (selectedTeams.length === 0) {
+      matchesContainer.innerHTML = `
+        <div class="empty-selection">
+          <p>You haven't selected any favorite teams yet.</p>
+          <button class="btn" onclick="window.location.href='teams.html'">Select Teams</button>
+        </div>
+      `;
+      return;
+    }
+    
+    // Create match-ups for selected teams
+    const matches = generateRandomMatches(selectedTeams);
+    
+    // Display matches
+    matches.forEach(match => {
+      const matchElement = createMatchElement(match);
+      matchesContainer.appendChild(matchElement);
+    });
+  }
+
+  function generateRandomMatches(selectedTeams) {
+    const matches = [];
+    const currentDate = new Date();
+    
+    // Define NBA and NFL teams lists to create logical match-ups
+    const nbaTeams = [
+      "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls",
+      "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors",
+      "Houston Rockets", "Indiana Pacers", "LA Clippers", "Los Angeles Lakers", "Memphis Grizzlies",
+      "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
+      "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers",
+      "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"
+    ];
+    
+    const nflTeams = [
+      "Arizona Cardinals", "Atlanta Falcons", "Baltimore Ravens", "Buffalo Bills", "Carolina Panthers",
+      "Chicago Bears", "Cincinnati Bengals", "Cleveland Browns", "Dallas Cowboys", "Denver Broncos",
+      "Detroit Lions", "Green Bay Packers", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars",
+      "Kansas City Chiefs", "Las Vegas Raiders", "Los Angeles Chargers", "Los Angeles Rams", "Miami Dolphins",
+      "Minnesota Vikings", "New England Patriots", "New Orleans Saints", "New York Giants", "New York Jets",
+      "Philadelphia Eagles", "Pittsburgh Steelers", "San Francisco 49ers", "Seattle Seahawks", "Tampa Bay Buccaneers",
+      "Tennessee Titans", "Washington Commanders"
+    ];
+    
+    // Create matches for each selected team
+    selectedTeams.forEach(team => {
+      let opponentTeams = [];
+      let league = "";
+      
+      // Determine which league the team belongs to
+      if (nbaTeams.includes(team)) {
+        opponentTeams = nbaTeams.filter(nbaTeam => nbaTeam !== team);
+        league = "NBA";
+      } else if (nflTeams.includes(team)) {
+        opponentTeams = nflTeams.filter(nflTeam => nflTeam !== team);
+        league = "NFL";
+      } else {
+        return; // Skip if team not found in either league
+      }
+      
+      // Get a random opponent
+      const randomOpponent = opponentTeams[Math.floor(Math.random() * opponentTeams.length)];
+      
+      // Generate a random future date (within next 14 days)
+      const matchDate = new Date(currentDate);
+      matchDate.setDate(currentDate.getDate() + Math.floor(Math.random() * 14) + 1);
+      
+      // Generate random time (hours between 12 and 22, minutes either 00 or 30)
+      const hours = Math.floor(Math.random() * 11) + 12;
+      const minutes = Math.random() < 0.5 ? 0 : 30;
+      matchDate.setHours(hours, minutes, 0, 0);
+      
+      // Create match object
+      const match = {
+        homeTeam: team,
+        awayTeam: randomOpponent,
+        date: matchDate,
+        league: league
+      };
+      
+      matches.push(match);
+    });
+    
+    // Sort matches by date
+    matches.sort((a, b) => a.date - b.date);
+    
+    return matches;
+  }
+
+  function createMatchElement(match) {
+    const matchDiv = document.createElement('div');
+    matchDiv.className = 'match-card';
+    
+    // Format date and time
+    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit' };
+    const formattedDate = match.date.toLocaleDateString('en-US', dateOptions);
+    const formattedTime = match.date.toLocaleTimeString('en-US', timeOptions);
+    
+    matchDiv.innerHTML = `
+      <div class="match-teams">
+        <div class="team">
+          <div class="team-name">${match.homeTeam}</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team">
+          <div class="team-name">${match.awayTeam}</div>
+        </div>
+      </div>
+      <div class="match-details">
+        <span class="league-badge ${match.league.toLowerCase()}">${match.league}</span>
+        <div class="match-datetime">
+          <div><i class="fa fa-calendar"></i> ${formattedDate}</div>
+          <div><i class="fa fa-clock-o"></i> ${formattedTime}</div>
+        </div>
+        <button class="bet-button" onclick="placeBet('${match.homeTeam}', '${match.awayTeam}')">Place Bet</button>
+      </div>
+    `;
+    
+    return matchDiv;
+  }
+
+  function placeBet(homeTeam, awayTeam) {
+    // Check if user is logged in
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+      alert('Please login to place a bet');
+      openLoginScreen();
+      return;
+    }
+    
+    // Find the match card element by iterating through all match cards
+    const matchCards = document.querySelectorAll('.match-card');
+    let matchCard = null;
+    
+    for (const card of matchCards) {
+      if (card.querySelector('.team-name').textContent === homeTeam) {
+        matchCard = card;
+        break;
+      }
+    }
+    
+    if (!matchCard) {
+      console.error('Match card not found');
+      return;
+    }
+    
+    // Create match object to pass to bet page
+    const matchDetails = {
+      homeTeam: homeTeam,
+      awayTeam: awayTeam,
+      league: matchCard.querySelector('.league-badge').textContent,
+      date: matchCard.querySelector('.match-datetime').innerHTML
+    };
+    
+    // Save match details to localStorage
+    localStorage.setItem('selectedMatch', JSON.stringify(matchDetails));
+    
+    // Redirect to place-bet.html
+    window.location.href = 'place-bet.html';
+  }
+
+  function activateLink(link) {
+    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+    link.classList.add('active');
+  }
+
+  function openLoginScreen() {
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+
+  function closeLoginScreen() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('loginForm').reset();
+  }
+
+  function openRegisterScreen() {
+    document.getElementById('registerScreen').style.display = 'flex';
+  }
+
+  function closeRegisterScreen() {
+    document.getElementById('registerScreen').style.display = 'none';
+  }
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  function saveUserData(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const firstName = capitalize(formData.get('firstName'));
+    const lastName = capitalize(formData.get('lastName'));
+    const email = formData.get('email').toLowerCase();
+    const phone = formData.get('phone');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirmPassword');
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    // Get existing users or create new users array
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    // Check if user with this email already exists
+    const userExists = users.some(user => user.email === email);
+    if (userExists) {
+      alert("An account with this email already exists. Please login instead.");
+      closeRegisterScreen();
+      openLoginScreen();
+      return;
+    }
+
+    const userData = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      password: password
+    };
+
+    // Add new user to users array
+    users.push(userData);
+    
+    // Save users array back to localStorage
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // Set current user as logged in
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    // Close registration form
+    closeRegisterScreen();
+    
+    // Redirect to teams.html page
+    window.location.href = 'teams.html';
+  }
+
+  function loginUser(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    const email = formData.get('email').toLowerCase();
+    const password = formData.get('password');
+    
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    // Find user with matching email and password
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+      // Store current user in localStorage
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      
+      // Update UI
+      checkLoginStatus();
+      
+      // Close login form
+      closeLoginScreen();
+      
+      // Generate upcoming bets based on user's selected teams
+      generateUpcomingBets();
+      
+      alert(`Welcome back, ${user.firstName}!`);
+    } else {
+      alert("Invalid email or password. Please try again.");
+    }
+  }
+
+  function logoutUser() {
+    // Remove current user from localStorage
+    localStorage.removeItem('currentUser');
+    
+    // Update UI
+    checkLoginStatus();
+    
+    alert("You have been logged out successfully.");
+  }
+</script>
+
+</body>
+</html>
