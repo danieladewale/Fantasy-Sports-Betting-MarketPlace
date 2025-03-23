@@ -1,0 +1,29 @@
+const express = require('express');
+const router = express.Router();
+const ProfitEngineer = require('../models/ProfitEngineer');
+
+// Endpoint to get the leaderboard of the top profit engineers
+router.get('/', async (req, res) => {
+    try {
+        // Fetching top 10 Profit Engineers based on totalProfit, in descending order
+        const leaderboard = await ProfitEngineer.find()
+            .sort({ totalProfit: -1 }) // Sort by totalProfit in descending order
+            .limit(10); // Limit to top 10 Profit Engineers
+
+        // Sending the leaderboard response
+        res.status(200).json({
+            success: true,
+            message: 'Top profit engineers fetched successfully!',
+            leaderboard: leaderboard
+        });
+    } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching leaderboard.',
+            error: err.message
+        });
+    }
+});
+
+module.exports = router;

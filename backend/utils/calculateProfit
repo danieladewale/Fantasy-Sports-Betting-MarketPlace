@@ -1,0 +1,24 @@
+// utils/calculateProfit.js
+const Bet = require('../models/Bet');
+
+async function calculatePortfolioProfit(portfolioId) {
+  try {
+    const bets = await Bet.find({ portfolio: portfolioId });
+    let totalProfit = 0;
+
+    bets.forEach((bet) => {
+      if (bet.outcome === 'won') {
+        totalProfit += bet.amountStaked * bet.odds - bet.amountStaked; // Net profit
+      } else if (bet.outcome === 'lost') {
+        totalProfit -= bet.amountStaked; // Loss
+      }
+    });
+
+    return totalProfit;
+  } catch (error) {
+    console.error('Error calculating portfolio profit', error);
+    return 0;
+  }
+}
+
+module.exports = calculatePortfolioProfit;
