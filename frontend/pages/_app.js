@@ -11,3 +11,8 @@ import CashOut from './components/CashOut';
 
 // In your router configuration
 <Route path="/cashout" element={<CashOut />} />
+
+import PlaceBet from './components/PlaceBet';
+
+// In your router configuration
+<Route path="/place-bet" element={<PlaceBet />} />
